@@ -104,3 +104,13 @@ print("Recommended Fertilizer:", prediction[0])
 | Frontend        | Backend       | Machine Learning |
 |----------------|---------------|------------------|
 | HTML, CSS, JS  | Flask (Python) | SVM + Scikit-learn |
+
+---
+## 🎥 Demo Video## 🎥 Demo Video
+
+<video width="100%" controls>
+  <source src="./demo_video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
