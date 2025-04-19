@@ -108,7 +108,8 @@ print("Recommended Fertilizer:", prediction[0])
 ---
 ## 🎥 Demo Video
 
-[Click here to watch the demo video](./demo_video.mp4)
+https://github.com/user-attachments/assets/6516f949-48d6-40b1-93d9-7244f0f535b0
+
 
 
 
