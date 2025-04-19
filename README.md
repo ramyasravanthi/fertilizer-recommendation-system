@@ -38,7 +38,7 @@ fertilizer-recommendation/
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/your-username/fertilizer-recommendation.git
+git clone https://github.com/ramyasravanthi/fertilizer-recommendation.git
 cd fertilizer-recommendation
 ```
 
@@ -51,13 +51,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ### 3️⃣ Install Dependencies
 ```bash
 pip install -r requirements.txt
-```
-
-> `requirements.txt` example:
-```text
-flask
-scikit-learn
-numpy
 ```
 
 ### 4️⃣ Get OpenWeatherMap API Key
