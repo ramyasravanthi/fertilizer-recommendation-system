@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fertilizer Predictor 🌱</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #eafaf1;
+            padding: 40px 20px;
+            background-image: url('https://www.rnbglobal.edu.in/assets/images/blog/WA0w-Background-1.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2e7d32;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        label {
+            display:block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            grid-column: span 2;
+            padding: 12px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #43a047;
+        }
+        #result {
+            grid-column: span 2;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .banner-image {
+            width: 100%;
+            height: auto;
+            max-height: 275px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 0px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://eos.com/wp-content/uploads/2023/11/components-of-different-types-of-fertilizers.jpg" 
+     alt="Fertilizer Banner" 
+     class="banner-image">
+
+        <h2>🌾 Fertilizer Recommendation Tool</h2>
+        <form id="predictForm">
+            <div>
+                <label>Nitrogen (N):</label>
+                <input type="number" name="nitrogen" required>
+            </div>
+            <div>
+                <label>Temperature (°C):</label>
+                <input type="number" name="temperature" required>
+            </div>
+            <div>
+                <label>Phosphorous (P):</label>
+                <input type="number" name="phosphorous" required>
+            </div>
+            <div>
+                <label>Moisture:</label>
+                <input type="number" name="moisture" required>
+            </div>
+            <div>
+                <label>Potassium (K):</label>
+                <input type="number" name="potassium" required>
+            </div>
+            <div>
+                <label>Soil Type:</label>
+                <select name="soil" required>
+                    <option value="Sandy">Sandy</option>
+                    <option value="Loamy">Loamy</option>
+                    <option value="Black">Black</option>
+                    <option value="Red">Red</option>
+                    <option value="Clayey">Clayey</option>
+                </select>
+            </div>
+            <div class="full-width">
+                <label>Crop Type:</label>
+                <select name="crop" required>
+                    <option value="Maize">Maize</option>
+                    <option value="Sugarcane">Sugarcane</option>
+                    <option value="Cotton">Cotton</option>
+                    <option value="Tobacco">Tobacco</option>
+                    <option value="Paddy">Paddy</option>
+                    <option value="Barley">Barley</option>
+                    <option value="Wheat">Wheat</option>
+                    <option value="Millets">Millets</option>
+                    <option value="Oil seeds">Oil seeds</option>
+                    <option value="Pulses">Pulses</option>
+                    <option value="Ground Nuts">Ground Nuts</option>
+                </select>
+            </div>
+
+            <button type="submit">Predict Fertilizer</button>
+            <div id="result"></div>
+        </form>
+    </div>
+
+    <script>
+        // Auto-fetch temperature using OpenWeather API and Geolocation
+        window.onload = function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const apiKey = 'de31e0db5105e6eca2cf5bc13246121b'; // 🔑 Replace with your key
+
+                    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            const temperature = Math.round(data.main.temp);
+                            const tempInput = document.querySelector('input[name="temperature"]');
+                            tempInput.value = temperature;
+                            tempInput.style.backgroundColor = '#d4edda';
+                        })
+                        .catch(err => console.error("Weather API error:", err));
+                }, function (error) {
+                    console.warn("Geolocation denied or unavailable:", error.message);
+                });
+            } else {
+                console.warn("Geolocation not supported in this browser.");
+            }
+        };
+
+        document.getElementById('predictForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const selectedSoil = formData.get("soil");
+            const selectedCrop = formData.get("crop");
+
+            const features = [
+                parseFloat(formData.get("temperature")),
+                parseFloat(formData.get("moisture")),
+                parseFloat(formData.get("nitrogen")),
+                parseFloat(formData.get("potassium")),
+                parseFloat(formData.get("phosphorous")),
+
+                // Soil Type (drop 'Black')
+                selectedSoil === "Clayey" ? 1 : 0,
+                selectedSoil === "Loamy" ? 1 : 0,
+                selectedSoil === "Red" ? 1 : 0,
+                selectedSoil === "Sandy" ? 1 : 0,
+
+                // Crop Type (drop 'Barley')
+                selectedCrop === "Cotton" ? 1 : 0,
+                selectedCrop === "Ground Nuts" ? 1 : 0,
+                selectedCrop === "Maize" ? 1 : 0,
+                selectedCrop === "Millets" ? 1 : 0,
+                selectedCrop === "Oil seeds" ? 1 : 0,
+                selectedCrop === "Paddy" ? 1 : 0,
+                selectedCrop === "Pulses" ? 1 : 0,
+                selectedCrop === "Sugarcane" ? 1 : 0,
+                selectedCrop === "Tobacco" ? 1 : 0,
+                selectedCrop === "Wheat" ? 1 : 0
+            ];
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ features: features })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = "Recommended Fertilizer: 🌿 " + data.prediction;
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = "Error: " + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
+
